@@ -56,7 +56,7 @@ export default function  SphereModel() {
   function Planes() {}
 
   return (
-    <div id="canvas-container">
+    <div id="canvas-container" style={{ width: "100vw", height: "100vh" }}>
       <Canvas
         camera={{
           fov: 60,
