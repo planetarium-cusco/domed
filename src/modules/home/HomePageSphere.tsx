@@ -1,13 +1,16 @@
-import { HelloWorld } from "components/ui/HelloWorld";
-import { ListUsers } from "modules/users/ListUsers";
-import { SphereModel } from "components/ui/Sphere"
-import { Center, Stack } from "@mantine/core";
+import { SphereModel } from "components/ui/Sphere/Sphere"
+import CanvasComponent from "components/ui/Canvas";
+import FloorModel from "components/ui/Sphere/Floor";
 
-
+const Radius = 1;
 
 const HomePageContentSphere = () => {
   return (
-    <SphereModel/>
+    <CanvasComponent>
+        <SphereModel   radius={Radius}/>
+        <FloorModel radius={Radius}/>
+    </CanvasComponent>
+    
   );
 };
 
