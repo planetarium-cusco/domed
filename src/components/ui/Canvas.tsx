@@ -43,7 +43,7 @@ export default function  CanvasComponent(props: CanvasProps) {
         />
         <directionalLight position={[0.2, 1, 1]} />
         {props.children}
-        <OrbitControls />
+        
       </Canvas>
     </div>
   );

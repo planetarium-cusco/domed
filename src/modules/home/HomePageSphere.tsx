@@ -1,16 +1,28 @@
 import { SphereModel } from "components/ui/Sphere/Sphere"
 import CanvasComponent from "components/ui/Canvas";
 import FloorModel from "components/ui/Sphere/Floor";
+import { VRButton, ARButton, XR, Controllers, Hands } from '@react-three/xr'
+import { Canvas } from '@react-three/fiber'
 
 const Radius = 1;
 
 const HomePageContentSphere = () => {
   return (
-    <CanvasComponent>
-        <SphereModel   radius={Radius}/>
-        <FloorModel radius={Radius}/>
-    </CanvasComponent>
-    
+    <>
+  <VRButton />
+  <CanvasComponent>
+    <XR>
+    <Controllers />
+    <Hands />
+    <mesh>
+      <boxGeometry />
+      <meshBasicMaterial color="blue" />
+    </mesh>
+  </XR>
+      <SphereModel   radius={Radius}/>
+      <FloorModel radius={Radius}/>
+  </CanvasComponent>
+    </>
   );
 };
 
