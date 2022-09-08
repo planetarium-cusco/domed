@@ -14,10 +14,7 @@ const HomePageContentSphere = () => {
     <XR>
     <Controllers />
     <Hands />
-    <mesh>
-      <boxGeometry />
-      <meshBasicMaterial color="blue" />
-    </mesh>
+    
   </XR>
       <SphereModel   radius={Radius}/>
       <FloorModel radius={Radius}/>
