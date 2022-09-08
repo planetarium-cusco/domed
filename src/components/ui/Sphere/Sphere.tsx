@@ -39,7 +39,7 @@ export default function  SphereModel(props: SphereMeshProps) {
       const planeRef = useRef(null!);
       const texture = new TextureLoader().load("https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Starsinthesky.jpg/1920px-Starsinthesky.jpg",
       );
-      const planeGeometry = new PlaneGeometry(0.13, 0.13);
+      const planeGeometry = new PlaneGeometry(0.13*props.radius, 0.13*props.radius);
       const planeMaterial = new MeshBasicMaterial({
         map : texture,
         side: DoubleSide,
