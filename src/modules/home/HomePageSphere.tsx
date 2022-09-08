@@ -16,7 +16,7 @@ const HomePageContentSphere = () => {
     <Hands />
     
   </XR>
-      <SphereModel   radius={Radius}/>
+      <SphereModel   />
       <FloorModel radius={Radius}/>
   </CanvasComponent>
     </>
