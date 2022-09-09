@@ -17,7 +17,7 @@ export default function  FloorModel({ radius }: FloorMeshProps) {
         <circleBufferGeometry args={[radius, 50]} />
         <meshStandardMaterial
           color = { 0xa9a9a9 }
-          wireframe={true}
+          //wireframe={true}
           side={DoubleSide}
         />
       </mesh>

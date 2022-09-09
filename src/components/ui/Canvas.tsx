@@ -2,6 +2,7 @@
 import { Canvas, useThree } from "@react-three/fiber";
 import { useEffect } from "react";
 import { OrbitControls } from '@react-three/drei'
+import { Vector3 } from "three";
 //import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 type CanvasProps ={
@@ -43,7 +44,7 @@ export default function  CanvasComponent(props: CanvasProps) {
         />
         <directionalLight position={[0.2, 1, 1]} />
         {props.children}
-        <OrbitControls />
+        <OrbitControls target0={new Vector3(0,25,0)}/>
       </Canvas>
     </div>
   );
