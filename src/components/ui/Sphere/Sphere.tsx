@@ -67,16 +67,10 @@ export default function SphereModel({
 
     console.log(planes);
     //.slice(widthSegments, widthSegments + 3)
-  }, []);
+  }, [widthSegments]);
 
   useEffect(() => {
     if (planes) {
-      // vertices
-      //   .filter((_, i) => i > 51)
-      //   .map((vertex, j) => {
-      //     // vertices[]
-      //   });
-
       console.log("planes", planes);
       console.log(vector3ArrayToFloat32Array(planes[0]));
     }
