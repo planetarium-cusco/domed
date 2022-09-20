@@ -13,10 +13,12 @@ type SphereMeshProps = {
 };
 
 export default function SphereModel({
-  radius = 6,
+  radius = 20,
   widthSegments = Math.ceil(radius / 2),
   heightSegments = Math.floor(radius / 2),
 }: SphereMeshProps) {
+  const facecount = widthSegments* heightSegments;
+  const tilescount = widthSegments * (1+2*(heightSegments-2)+1)
   const sphereRef = useRef<Mesh | null>(null);
   // const geometryRef = useRef<Mesh | null>(null);
 
@@ -40,7 +42,7 @@ export default function SphereModel({
     vectors2: Vector2[],
     vectors3: Vector2[]
   ): Float32Array => {
-    console.log("vector uvs 32: ", vectors);
+    //console.log("vector uvs 32: ", vectors);
     const array = new Float32Array(6);
     array[0] = vectors[0].x;
     array[1] = vectors[0].y;
@@ -114,6 +116,29 @@ export default function SphereModel({
   );
 
   const images = [];
+  // const uvsfinal = new Float32Array([
+  //   0.5, 1,  0, 0,   1,0,
+  //   0.5, 1,  0, 0,   1,0,
+  //   0.5, 1,  0, 0,   1,0, //3x6   widthsegments x 3(vertices) * 2(parametros)
+  //   0.5, 1,  0, 0,   1,0, 
+    
+   
+  //   0,1,0,0,1,0,0,1,1,0,1,1,
+  //   0,1,0,0,1,0,0,1,1,0,1,1,
+  //   0,1,0,0,1,0,0,1,1,0,1,1, // 2nd    // 3x12   widthsegments x 3(vertices) *2(triangulos /cara) * 2(parametros)
+  //   0,1,0,0,1,0,0,1,1,0,1,1,
+
+  //   0,1,0,0,1,0,0,1,1,0,1,1,
+  //   0,1,0,0,1,0,0,1,1,0,1,1,
+  //   0,1,0,0,1,0,0,1,1,0,1,1, // 2nd    // 3x12   widthsegments x 3(vertices) *2(triangulos /cara) * 2(parametros)
+  //   0,1,0,0,1,0,0,1,1,0,1,1,
+
+  //   0, 1,  0.5, 0,  1, 1,
+  //   0, 1,  0.5, 0,  1, 1,
+  //   0, 1,  0.5, 0,  1, 1,
+  //   0, 1,  0.5, 0,  1, 1 //3rd widthsegments x 3(vertices) * 2(parametros)
+  // ]);
+
   const uvsfinal = new Float32Array([
     0.5, 1, 0, 0, 1,0,
     0.5, 1, 0, 0, 1,0,
@@ -125,6 +150,8 @@ export default function SphereModel({
     0,1,0.5,0,1,1,
     0,1,0.5,0,1,1 //3rd
   ]);
+   
+  //console.log("lengththth",uvsfinal.length);
   // const pruebavert = new Float32Array([-1, -1, 1, 1, -1, 1, -1, 1, 1]);
   const pruebavert = new Float32Array([-1, -1, 1, 1, -1, 1, -1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1]);
   // const pruebanorm = new Float32Array([0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1]);
@@ -188,11 +215,15 @@ export default function SphereModel({
     const sphereVertices = sphereRef?.current?.geometry?.attributes?.position?.array;
     const sphereUvs = sphereRef?.current?.geometry?.attributes?.uv?.array;
 
-    console.log(sphereUvs);
-
+    //console.log(sphereUvs);
+      const uvlen = new Array( facecount  ); //widthSegments*6 + widthSegments*12 +widthSegments*6 //widthSegments*6*(1+2*(heightSegments-2)+1)
+      //console.log("uvlen",uvlen);
+    //const uvlen2 = new Float32Array( Array(10).fill(${0.5,2}));
+    //console.log(uvlen2);
     if (typeof sphereVertices === "undefined" || typeof sphereUvs === "undefined") {
       return;
     }
+    
 
     const vertices = Array.prototype.slice
       .call(sphereVertices)
@@ -208,7 +239,7 @@ export default function SphereModel({
 
     vertices.forEach((vert, x) => {
       if (
-        ((x + 1) % (widthSegments + 1) != 0 && x < widthSegments * (heightSegments + 1)) ||
+        ((x + 1) % (widthSegments + 1) != 0 && x < widthSegments * (heightSegments + 1) ) ||
         x == 0
       ) {
         // Borrar puntos M N O P
@@ -229,7 +260,7 @@ export default function SphereModel({
         // console.log(v1, v6, v3);
 
         // console.log(v1, v3, v2);
-        if (v1 && v3 && v6 && x < widthSegments * (heightSegments + 1) - 4) {
+        if (v1 && v3 && v6 && x < widthSegments * (heightSegments + 1) - (widthSegments+1)) {  //revisar  más adelante widthsegments+1
           // console.log(v1, v2, v3, v4, v5, v6);
 
           // console.log(x);
@@ -252,7 +283,7 @@ export default function SphereModel({
 
     // setVertices(vertices);
     setPlanes(planes);
-
+    
     // console.log(planes);
     //.slice(widthSegments, widthSegments + 3)
 
@@ -264,16 +295,93 @@ export default function SphereModel({
     //     return new Vector2(sphereUvs[id], sphereUvs[id + 1]);
     //   });
 
-    const uvs = Array.prototype.slice
-      .call(uvsfinal)
+    const uvlist = Array.prototype.slice
+    .call(uvlen)
+    .filter((_, i) => i % 1 === 0)
+    .map((_,i) => {
+      return 1
+    });
+    //console.log("uvlist",uvlist)
+    const arraysup =  [0.5, 1,  0, 0,   1,0,];
+    const arraymid =  [0,1,0,0,1,0,    0,1,1,0,1,1,];
+    const arrayinf =  [0, 1,  0.5, 0,  1, 1,];
+    const finaluvarray = new Array();
+    uvlen.fill(arraysup, 0, widthSegments).flat()
+    uvlen.fill(arraymid,widthSegments,(widthSegments*heightSegments) - widthSegments  ).flat
+    uvlen.fill(arrayinf, (widthSegments*heightSegments) - widthSegments ,(widthSegments*heightSegments)  ).flat()
+    uvlen.map(
+      (uvarray,i)=> {
+        uvarray.map(
+          (uvsubarray,j) =>
+          {
+            finaluvarray.push(uvsubarray)
+          }
+        )
+      }
+    )
+    const floatuvlen = new Float32Array(finaluvarray)
+    //console.log("finaluv",finaluvarray)
+    //console.log("floatfinaluv",floatuvlen)
+    //console.log("finaluvarr6", uvsfinal)
+   //console.log(uvlen.fill(arraysup, 0, widthSegments).flat());
+
+
+    // const uvs = Array.prototype.slice
+    //   .call(uvlen)
+    //   .filter((_, i) => i % 2 === 0)
+    //   .map((uv, i) => {
+    //     const id = i * 2;
+
+    //     // const uvsfinal = new Float32Array([
+    //     //   0.5, 1,  0, 0,   1,0,
+    //     //   0.5, 1,  0, 0,   1,0,
+    //     //   0.5, 1,  0, 0,   1,0, //3x6   widthsegments x 3(vertices) * 2(parametros)
+    //     //   0.5, 1,  0, 0,   1,0, 
+          
+      
+    //     //   0,1,0,0,1,0,    0,1,1,0,1,1,
+    //     //   0,1,0,0,1,0,0,1,1,0,1,1,
+    //     //   0,1,0,0,1,0,0,1,1,0,1,1, // 2nd    // 3x12   widthsegments x 3(vertices) *2(triangulos /cara) * 2(parametros)
+    //     //   0,1,0,0,1,0,0,1,1,0,1,1,
+      
+    //     //   0,1,0,0,1,0,0,1,1,0,1,1,
+    //     //   0,1,0,0,1,0,0,1,1,0,1,1,
+    //     //   0,1,0,0,1,0,0,1,1,0,1,1, // 2nd    // 3x12   widthsegments x 3(vertices) *2(triangulos /cara) * 2(parametros)
+    //     //   0,1,0,0,1,0,0,1,1,0,1,1,
+      
+    //     //   0, 1,  0.5, 0,  1, 1,
+    //     //   0, 1,  0.5, 0,  1, 1,
+    //     //   0, 1,  0.5, 0,  1, 1,
+    //     //   0, 1,  0.5, 0,  1, 1 //3rd widthsegments x 3(vertices) * 2(parametros)
+    //     // ]);
+
+    //     if (i<widthSegments *3) {
+
+    //     }
+
+    //     if (i>=widthSegments *3 && i <  (widthSegments * (heightSegments + 1) - (widthSegments+1)) *3 ) {
+          
+    //     }
+
+    //     if (i> (widthSegments * (heightSegments + 1) - (widthSegments+1)) *3 ) {
+          
+    //     }
+
+
+
+    //     return new Vector2(uvsfinal[id], uvsfinal[id + 1]);
+    //   });
+      
+      const uvs = Array.prototype.slice
+      .call(floatuvlen)
       .filter((_, i) => i % 2 === 0)
       .map((uv, i) => {
         const id = i * 2;
-        return new Vector2(uvsfinal[id], uvsfinal[id + 1]);
+        return new Vector2(floatuvlen[id],floatuvlen[id + 1]);
       });
 
     const uvPlanes: Array<Vector2[]> = [];
-    console.log(uvs);
+    //console.log(uvs);
 
     uvs.forEach((uv, x) => {
       const uv1 = uvs[x];
@@ -282,20 +390,20 @@ export default function SphereModel({
         uvPlanes.push([uv1]);
       }
     });
-    // console.log(uvPlanes);
+     //console.log("uvplanes",uvPlanes);
     setuvPlanes(uvPlanes);
   }, [widthSegments]);
 
   useEffect(() => {
     if (planes) {
-      console.log("planes", planes);
+      //console.log("planes", planes);
       // console.log(vector3ArrayToFloat32Array(planes[0]));
     }
   }, [planes]);
 
   useEffect(() => {
     if (uvPlanes) {
-      console.log("uv planes", uvPlanes);
+      // console.log("uv planes", uvPlanes);
       // console.log("uv1", vector2ArrayToFloat32Array(uvPlanes[1]));
       // console.log(vector3ArrayToFloat32Array(planes[0]));
     }
@@ -304,7 +412,9 @@ export default function SphereModel({
   // const prueba = materials.map((material, i) => console.log(i));
   // console.log(prueba);
   // console.log(textures);
-
+  //console.log("planeslen",planes?.length)
+  //console.log("planes",planes)
+  //console.log(Array.from([0.5, 1, 0, 1].fill(), x => x + x));
   return (
     <group>
       {/* <mesh>
