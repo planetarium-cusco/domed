@@ -1,4 +1,4 @@
-import { FrontSide, MeshBasicMaterial, SphereGeometry, TextureLoader } from "three";
+import { FrontSide, MeshBasicMaterial, SphereGeometry, TextureLoader, Vector2 } from "three";
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import { DoubleSide, Mesh, Vector3, BackSide } from "three";
@@ -22,6 +22,7 @@ export default function SphereModel({
 
   // const [vertices, setVertices] = useState<Vector3[] | null>(null);
   const [planes, setPlanes] = useState<Array<Vector3[]> | null>(null);
+  const [uvPlanes, setuvPlanes] = useState<Array<Vector2[]> | null>(null);
 
   const vector3ArrayToFloat32Array = (vectors: Vector3[]): Float32Array => {
     const array = new Float32Array(vectors.length * 3);
@@ -29,6 +30,17 @@ export default function SphereModel({
       array[index * 3] = vector.x;
       array[index * 3 + 1] = vector.y;
       array[index * 3 + 2] = vector.z;
+    });
+
+    return array;
+  };
+
+  const vector2ArrayToFloat32Array = (vectors: Vector2[]): Float32Array => {
+    console.log("vector uvs 32: ", vectors);
+    const array = new Float32Array(vectors.length * 2);
+    vectors.forEach((vector, index) => {
+      array[index * 2] = vector.x;
+      array[index * 2 + 1] = vector.y;
     });
 
     return array;
@@ -96,6 +108,86 @@ export default function SphereModel({
   );
 
   const images = [];
+  const uvsfinal = new Float32Array([
+    0.5,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0.5,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0.5,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0, // 2nd
+    1,
+    0,
+    0,
+    0.5,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0.5,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0.5,
+    1,
+    1, //3rd
+  ]);
+  // const pruebavert = new Float32Array([-1, -1, 1, 1, -1, 1, -1, 1, 1]);
+  const pruebavert = new Float32Array([-1, -1, 1, 1, -1, 1, -1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1]);
+  // const pruebanorm = new Float32Array([0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1]);
+
+  // const pruebauv = new Float32Array([0, 0, 1, 0, 0, 1]);
+  const pruebauv = new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]);
 
   // Object.keys(materials).forEach(key => {
   //   materials[key].forEach(name => images.push(name));
@@ -151,8 +243,11 @@ export default function SphereModel({
   ];
   useEffect(() => {
     const sphereVertices = sphereRef?.current?.geometry?.attributes?.position?.array;
+    const sphereUvs = sphereRef?.current?.geometry?.attributes?.uv?.array;
 
-    if (typeof sphereVertices === "undefined") {
+    console.log(sphereUvs);
+
+    if (typeof sphereVertices === "undefined" || typeof sphereUvs === "undefined") {
       return;
     }
 
@@ -204,8 +299,8 @@ export default function SphereModel({
         if (x > widthSegments) {
           // console.log(v1, v2, v3, v4, v5, v6);
 
-          console.log(x);
-          console.log(v1, v3, v2);
+          // console.log(x);
+          // console.log(v1, v3, v2);
           planes.push([v1, v3, v2]); // Por fuera
           // planes.push([v2, v3, v1]); // Por dentro
         }
@@ -217,6 +312,35 @@ export default function SphereModel({
 
     // console.log(planes);
     //.slice(widthSegments, widthSegments + 3)
+
+    // const uvs = Array.prototype.slice
+    //   .call(sphereUvs)
+    //   .filter((_, i) => i % 2 === 0)
+    //   .map((uv, i) => {
+    //     const id = i * 2;
+    //     return new Vector2(sphereUvs[id], sphereUvs[id + 1]);
+    //   });
+
+    const uvs = Array.prototype.slice
+      .call(uvsfinal)
+      .filter((_, i) => i % 2 === 0)
+      .map((uv, i) => {
+        const id = i * 2;
+        return new Vector2(uvsfinal[id], uvsfinal[id + 1]);
+      });
+
+    const uvPlanes: Array<Vector2[]> = [];
+    console.log(uvs);
+
+    uvs.forEach((uv, x) => {
+      const uv1 = uvs[x];
+
+      if (uv1) {
+        uvPlanes.push([uv1]);
+      }
+    });
+    // console.log(uvPlanes);
+    setuvPlanes(uvPlanes);
   }, [widthSegments]);
 
   useEffect(() => {
@@ -226,22 +350,64 @@ export default function SphereModel({
     }
   }, [planes]);
 
+  useEffect(() => {
+    if (uvPlanes) {
+      console.log("uv planes", uvPlanes);
+      console.log("float uv planes", vector2ArrayToFloat32Array(uvPlanes));
+      // console.log(vector3ArrayToFloat32Array(planes[0]));
+    }
+  }, [uvPlanes]);
+
   // const prueba = materials.map((material, i) => console.log(i));
   // console.log(prueba);
   // console.log(textures);
 
   return (
     <group>
-      <mesh>
+      {/* <mesh>
         <planeBufferGeometry args={[1, 1]} />
         <meshBasicMaterial map={texturee} />
+      </mesh> */}
+
+      <mesh>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            array={pruebavert}
+            count={pruebavert.length / 3}
+            itemSize={3}
+          />
+          {/* <bufferAttribute
+            attach="attributes-normal"
+            array={pruebanorm}
+            count={pruebanorm.length / 3}
+            itemSize={3}
+          /> */}
+          <bufferAttribute
+            attach="attributes-uv"
+            array={pruebauv}
+            count={pruebauv.length / 2}
+            itemSize={2}
+          />
+        </bufferGeometry>
+
+        <meshBasicMaterial
+          attach="material"
+          // color={0xff0000}
+          map={textureee}
+          // side={DoubleSide}
+          // wireframe={true}
+        />
       </mesh>
+
       <mesh ref={sphereRef} visible={false}>
         <sphereGeometry args={[radius, widthSegments, heightSegments]} />
         {/* <meshStandardMaterial color={0xa9a9a9} wireframe={true} /> */}
       </mesh>
       {/* <instancedMesh ref={planeRef} args={[planeGeometry, planeMaterial, 1987]} /> */}
+
       {planes &&
+        uvPlanes &&
         planes.map((plane, i) => {
           arrayMaterials.push(
             new MeshBasicMaterial({
@@ -256,7 +422,8 @@ export default function SphereModel({
           // });
           // console.log("plane", plane);
           return (
-            <mesh key={i} material={materials[i]}>
+            // <mesh key={i} material={materials[i]}>
+            <mesh key={i}>
               <bufferGeometry>
                 <bufferAttribute
                   attach="attributes-position"
@@ -264,13 +431,20 @@ export default function SphereModel({
                   count={plane.length}
                   itemSize={3}
                 />
+                <bufferAttribute
+                  attach="attributes-uv"
+                  array={vector2ArrayToFloat32Array(uvPlanes[i])}
+                  count={plane.length}
+                  itemSize={2}
+                />
               </bufferGeometry>
-              {/* <meshBasicMaterial
+              <meshBasicMaterial
                 attach="material"
-                color={0xff0000}
+                map={textureee}
+                // color={0xff0000}
                 // side={DoubleSide}
                 // wireframe={true}
-              /> */}
+              />
 
               {/* <meshBasicMaterial
                 attach="material"
