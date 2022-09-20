@@ -35,13 +35,19 @@ export default function SphereModel({
     return array;
   };
 
-  const vector2ArrayToFloat32Array = (vectors: Vector2[]): Float32Array => {
+  const vector2ArrayToFloat32Array = (
+    vectors: Vector2[],
+    vectors2: Vector2[],
+    vectors3: Vector2[]
+  ): Float32Array => {
     console.log("vector uvs 32: ", vectors);
-    const array = new Float32Array(vectors.length * 2);
-    vectors.forEach((vector, index) => {
-      array[index * 2] = vector.x;
-      array[index * 2 + 1] = vector.y;
-    });
+    const array = new Float32Array(6);
+    array[0] = vectors[0].x;
+    array[1] = vectors[0].y;
+    array[2] = vectors2[0].x;
+    array[3] = vectors2[0].y;
+    array[4] = vectors3[0].x;
+    array[5] = vectors3[0].y;
 
     return array;
   };
@@ -109,78 +115,15 @@ export default function SphereModel({
 
   const images = [];
   const uvsfinal = new Float32Array([
-    0.5,
-    1,
-    0,
-    0,
-    1,
-    0,
-    0.5,
-    1,
-    0,
-    0,
-    1,
-    0,
-    0.5,
-    1,
-    0,
-    0,
-    1,
-    0,
-    0,
-    1,
-    0,
-    0,
-    1,
-    0,
-    0,
-    1,
-    1,
-    0,
-    1,
-    0,
-    0,
-    1,
-    0,
-    0,
-    1,
-    0,
-    0,
-    1,
-    1,
-    0,
-    1,
-    0,
-    0,
-    1,
-    0,
-    0,
-    1,
-    0,
-    0,
-    1,
-    1,
-    0,
-    1,
-    0, // 2nd
-    1,
-    0,
-    0,
-    0.5,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0.5,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0.5,
-    1,
-    1, //3rd
+    0.5, 1, 0, 0, 1,0,
+    0.5, 1, 0, 0, 1,0,
+    0.5, 1, 0, 0, 1,0,
+    0,1,0,0,1,0,0,1,1,0,1,1,
+    0,1,0,0,1,0,0,1,1,0,1,1,
+    0,1,0,0,1,0,0,1,1,0,1,1, // 2nd
+    0,1,0.5,0,1,1,
+    0,1,0.5,0,1,1,
+    0,1,0.5,0,1,1 //3rd
   ]);
   // const pruebavert = new Float32Array([-1, -1, 1, 1, -1, 1, -1, 1, 1]);
   const pruebavert = new Float32Array([-1, -1, 1, 1, -1, 1, -1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1]);
@@ -353,7 +296,7 @@ export default function SphereModel({
   useEffect(() => {
     if (uvPlanes) {
       console.log("uv planes", uvPlanes);
-      console.log("float uv planes", vector2ArrayToFloat32Array(uvPlanes));
+      // console.log("uv1", vector2ArrayToFloat32Array(uvPlanes[1]));
       // console.log(vector3ArrayToFloat32Array(planes[0]));
     }
   }, [uvPlanes]);
@@ -433,7 +376,11 @@ export default function SphereModel({
                 />
                 <bufferAttribute
                   attach="attributes-uv"
-                  array={vector2ArrayToFloat32Array(uvPlanes[i])}
+                  array={vector2ArrayToFloat32Array(
+                    uvPlanes[i * 3],
+                    uvPlanes[i * 3 + 1],
+                    uvPlanes[i * 3 + 2]
+                  )}
                   count={plane.length}
                   itemSize={2}
                 />
