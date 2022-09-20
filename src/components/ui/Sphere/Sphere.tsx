@@ -465,6 +465,7 @@ export default function SphereModel({
           arrayMaterials.push(
             new MeshBasicMaterial({
               map: texturee,
+              
               side: DoubleSide,
             })
           );
@@ -497,7 +498,7 @@ export default function SphereModel({
               </bufferGeometry>
               <meshBasicMaterial
                 attach="material"
-                map={textureee}
+                map= { new TextureLoader().load(`https://source.unsplash.com/random/200x200?sig=${(i % 2 ===0)? i : i-1 }`)}
                 // color={0xff0000}
                 // side={DoubleSide}
                 // wireframe={true}
