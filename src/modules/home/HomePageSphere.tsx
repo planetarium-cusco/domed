@@ -6,7 +6,10 @@ import { Canvas } from "@react-three/fiber";
 
 import { SphereMeshProps } from "components/ui/Sphere/Sphere";
 
-const HomePageContentSphere = ({ radius = 36 }: SphereMeshProps) => {
+const HomePageContentSphere = ({
+  radius = 36,
+  widthSegments = Math.ceil(radius / 2),
+}: SphereMeshProps) => {
   return (
     <>
       <VRButton />
@@ -15,8 +18,8 @@ const HomePageContentSphere = ({ radius = 36 }: SphereMeshProps) => {
           <Controllers />
           <Hands />
         </XR>
-        <SphereModel radius={radius}/>
-        <FloorModel radius={radius} />
+        <SphereModel radius={radius} />
+        <FloorModel radius={radius} widthSegments={widthSegments} />
       </CanvasComponent>
     </>
   );

@@ -160,6 +160,18 @@ export default function SphereModel({
         <meshStandardMaterial color={0xa9a9a9} wireframe={true} />
       </mesh>
 
+      {planes && (
+        <mesh position={[0, planes[0][0].y, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <circleBufferGeometry args={[planes[0][1].x, widthSegments]} />
+          <meshBasicMaterial
+            // color = { 0xa9a9a9 }
+            map={new TextureLoader().load(`https://source.unsplash.com/random/200x200?sig=${0}`)}
+            // wireframe={true}
+            side={BackSide}
+          />
+        </mesh>
+      )}
+
       {planes &&
         uvPlanes &&
         planes.map((plane, i) => {
@@ -190,7 +202,7 @@ export default function SphereModel({
                     widthSegments % 2 === 0 ? (i % 2 === 0 ? i : i - 1) : i % 2 !== 0 ? i + 1 : i
                   }`
                 )}
-                // side={DoubleSide}
+                side={DoubleSide}
                 // wireframe={true}
               />
             </mesh>
