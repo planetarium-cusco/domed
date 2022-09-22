@@ -4,9 +4,9 @@ import FloorModel from "components/ui/Sphere/Floor";
 import { VRButton, ARButton, XR, Controllers, Hands } from "@react-three/xr";
 import { Canvas } from "@react-three/fiber";
 
-// const Radius = 50;
+import { SphereMeshProps } from "components/ui/Sphere/Sphere";
 
-const HomePageContentSphere = () => {
+const HomePageContentSphere = ({ radius = 36 }: SphereMeshProps) => {
   return (
     <>
       <VRButton />
@@ -15,8 +15,8 @@ const HomePageContentSphere = () => {
           <Controllers />
           <Hands />
         </XR>
-        <SphereModel />
-        {/* <FloorModel radius={Radius}/> */}
+        <SphereModel radius={radius}/>
+        <FloorModel radius={radius} />
       </CanvasComponent>
     </>
   );
