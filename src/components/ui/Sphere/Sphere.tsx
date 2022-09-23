@@ -17,7 +17,7 @@ export default function SphereModel({
   widthSegments = Math.ceil(radius / 2),
   heightSegments = Math.floor(radius / 2),
 }: SphereMeshProps) {
-  const facecount = widthSegments * heightSegments;
+  const faceCount = widthSegments * heightSegments;
 
   const sphereRef = useRef<Mesh | null>(null);
 
@@ -57,7 +57,7 @@ export default function SphereModel({
     const sphereVertices = sphereRef?.current?.geometry?.attributes?.position?.array;
     const sphereUvs = sphereRef?.current?.geometry?.attributes?.uv?.array;
 
-    const uvlen = new Array(facecount); //widthSegments*6 + widthSegments*12 +widthSegments*6 //widthSegments*6*(1+2*(heightSegments-2)+1)
+    const uvLen = new Array<Array<number>>(faceCount); //widthSegments*6 + widthSegments*12 +widthSegments*6 //widthSegments*6*(1+2*(heightSegments-2)+1)
 
     if (typeof sphereVertices === "undefined" || typeof sphereUvs === "undefined") {
       return;
@@ -99,24 +99,25 @@ export default function SphereModel({
     setPlanes(planes);
 
     // const arraysup =  [0.5, 1,  0, 0,   1,0,]; // Por fuera
-    const arraysup = [1, 0, 0, 0, 0.5, 1]; //Por dentro
+    const arraySup = [1, 0, 0, 0, 0.5, 1]; //Por dentro
     // const arraymid = [0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1]; // Por fuera
-    const arraymid = [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1]; // Por dentro
+    const arrayMid = [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1]; // Por dentro
     // const arrayinf = [0, 1, 0.5, 0, 1, 1];// Por fuera
-    const arrayinf = [1, 1, 0.5, 0, 0, 1]; // Por dentro
+    const arrayInf = [1, 1, 0.5, 0, 0, 1]; // Por dentro
 
     const finaluvarray = new Array();
-    uvlen.fill(arraysup, 0, widthSegments).flat();
-    uvlen.fill(arraymid, widthSegments, widthSegments * heightSegments - widthSegments).flat;
-    uvlen
+    uvLen.fill(arraySup, 0, widthSegments).flat();
+    uvLen.fill(arrayMid, widthSegments, widthSegments * heightSegments - widthSegments).flat;
+    uvLen
       .fill(
-        arrayinf,
+        arrayInf,
         widthSegments * heightSegments - widthSegments,
         widthSegments * heightSegments
       )
       .flat();
-    uvlen.map((uvarray, i) => {
-      uvarray.map((uvsubarray, j) => {
+
+    uvLen.map((uvArray, i) => {
+      uvArray.map((uvsubarray, j) => {
         finaluvarray.push(uvsubarray);
       });
     });

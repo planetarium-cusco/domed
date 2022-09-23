@@ -7,7 +7,7 @@ import { Canvas } from "@react-three/fiber";
 import { SphereMeshProps } from "components/ui/Sphere/Sphere";
 
 const HomePageContentSphere = ({
-  radius = 36,
+  radius = 24,
   widthSegments = Math.ceil(radius / 2),
 }: SphereMeshProps) => {
   return (
