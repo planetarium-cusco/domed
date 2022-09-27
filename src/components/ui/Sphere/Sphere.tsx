@@ -21,9 +21,9 @@ export default function SphereModel({
   const [planes, setPlanes] = useState<Array<Vector3[]> | null>(null);
   const [uvPlanes, setUVPoints] = useState<Array<Vector2[]> | null>(null);
 
-  const vector3ArrayToFloat32Array = (vectors: Vector3[]): Float32Array => {
-    const array : Float32Array = new Float32Array(vectors.length * 3);
-    vectors.forEach((vector, index) => {
+  const vector3ArrayToFloat32Array = (vectorArray: Vector3[]): Float32Array => {
+    const array : Float32Array = new Float32Array(vectorArray.length * 3);
+    vectorArray.forEach((vector, index) => {
       array[index * 3] = vector.x;
       array[index * 3 + 1] = vector.y;
       array[index * 3 + 2] = vector.z;
@@ -33,17 +33,17 @@ export default function SphereModel({
   };
 
   const vector2ArrayToFloat32Array = (
-    vectors: Vector2[],
-    vectors2: Vector2[],
-    vectors3: Vector2[]
+    vectorArray: Vector2[],
+    vectorArray2: Vector2[],
+    vectorArray3: Vector2[]
   ): Float32Array => {
     const array : Float32Array = new Float32Array(6);
-    array[0] = vectors[0].x;
-    array[1] = vectors[0].y;
-    array[2] = vectors2[0].x;
-    array[3] = vectors2[0].y;
-    array[4] = vectors3[0].x;
-    array[5] = vectors3[0].y;
+    array[0] = vectorArray[0].x;
+    array[1] = vectorArray[0].y;
+    array[2] = vectorArray2[0].x;
+    array[3] = vectorArray2[0].y;
+    array[4] = vectorArray3[0].x;
+    array[5] = vectorArray3[0].y;
 
     return array;
   };
