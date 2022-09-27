@@ -1,10 +1,7 @@
-import { FrontSide, MeshBasicMaterial, SphereGeometry, TextureLoader, Vector2 } from "three";
-import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
+import { TextureLoader, Vector2 } from "three";
+import { useLoader } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import { DoubleSide, Mesh, Vector3, BackSide } from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { generateUUID } from "three/src/math/MathUtils";
-import { useTexture } from "@react-three/drei";
 
 export type SphereMeshProps = {
   radius?: number;
@@ -17,15 +14,15 @@ export default function SphereModel({
   widthSegments = Math.ceil(radius / 2),
   heightSegments = Math.floor(radius / 2),
 }: SphereMeshProps) {
-  const faceCount = widthSegments * heightSegments;
+  const faceCount : number = widthSegments * heightSegments;
 
   const sphereRef = useRef<Mesh | null>(null);
 
   const [planes, setPlanes] = useState<Array<Vector3[]> | null>(null);
-  const [uvPlanes, setuvPlanes] = useState<Array<Vector2[]> | null>(null);
+  const [uvPlanes, setUVPoints] = useState<Array<Vector2[]> | null>(null);
 
   const vector3ArrayToFloat32Array = (vectors: Vector3[]): Float32Array => {
-    const array = new Float32Array(vectors.length * 3);
+    const array : Float32Array = new Float32Array(vectors.length * 3);
     vectors.forEach((vector, index) => {
       array[index * 3] = vector.x;
       array[index * 3 + 1] = vector.y;
@@ -40,7 +37,7 @@ export default function SphereModel({
     vectors2: Vector2[],
     vectors3: Vector2[]
   ): Float32Array => {
-    const array = new Float32Array(6);
+    const array : Float32Array = new Float32Array(6);
     array[0] = vectors[0].x;
     array[1] = vectors[0].y;
     array[2] = vectors2[0].x;
@@ -51,15 +48,12 @@ export default function SphereModel({
     return array;
   };
 
-  const textureee = useLoader(TextureLoader, "/tauro.jpg");
-
   useEffect(() => {
-    const sphereVertices = sphereRef?.current?.geometry?.attributes?.position?.array;
-    const sphereUvs = sphereRef?.current?.geometry?.attributes?.uv?.array;
+    const sphereVertices : ArrayLike<number> | undefined = sphereRef?.current?.geometry?.attributes?.position?.array;
 
     const uvLen = new Array<Array<number>>(faceCount); //widthSegments*6 + widthSegments*12 +widthSegments*6 //widthSegments*6*(1+2*(heightSegments-2)+1)
 
-    if (typeof sphereVertices === "undefined" || typeof sphereUvs === "undefined") {
+    if (typeof sphereVertices === "undefined" ) {
       return;
     }
 
@@ -75,7 +69,7 @@ export default function SphereModel({
 
     vertices.forEach((vert, x) => {
       if (
-        ((x + 1) % (widthSegments + 1) != 0 && x < widthSegments * (heightSegments + 1)) ||
+        (vertices[x].y >= radius/heightSegments && (x + 1) % (widthSegments + 1) != 0 && x < widthSegments * (heightSegments + 1)) ||
         x == 0
       ) {
         // Borrar puntos M N O P
@@ -105,7 +99,7 @@ export default function SphereModel({
     // const arrayinf = [0, 1, 0.5, 0, 1, 1];// Por fuera
     const arrayInf = [1, 1, 0.5, 0, 0, 1]; // Por dentro
 
-    const finaluvarray = new Array();
+    const finalUVarray = new Array();
     uvLen.fill(arraySup, 0, widthSegments).flat();
     uvLen.fill(arrayMid, widthSegments, widthSegments * heightSegments - widthSegments).flat;
     uvLen
@@ -118,17 +112,17 @@ export default function SphereModel({
 
     uvLen.map((uvArray, i) => {
       uvArray.map((uvsubarray, j) => {
-        finaluvarray.push(uvsubarray);
+        finalUVarray.push(uvsubarray);
       });
     });
-    const floatuvlen = new Float32Array(finaluvarray);
+    const floatUVLen = new Float32Array(finalUVarray);
 
     const uvs = Array.prototype.slice
-      .call(floatuvlen)
+      .call(floatUVLen)
       .filter((_, i) => i % 2 === 0)
       .map((uv, i) => {
         const id = i * 2;
-        return new Vector2(floatuvlen[id], floatuvlen[id + 1]);
+        return new Vector2(floatUVLen[id], floatUVLen[id + 1]);
       });
 
     const uvPlanes: Array<Vector2[]> = [];
@@ -141,7 +135,7 @@ export default function SphereModel({
       }
     });
 
-    setuvPlanes(uvPlanes);
+    setUVPoints(uvPlanes);
   }, [widthSegments]);
 
   useEffect(() => {
@@ -203,7 +197,7 @@ export default function SphereModel({
                     widthSegments % 2 === 0 ? (i % 2 === 0 ? i : i - 1) : i % 2 !== 0 ? i + 1 : i
                   }`
                 )}
-                side={DoubleSide}
+                // side={DoubleSide}
                 // wireframe={true}
               />
             </mesh>
