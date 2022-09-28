@@ -6,7 +6,7 @@ on:
       - dev
 
 env:
-  IMAGE_REPO: registry.minsky.cc/planetarium-cusco/domed
+  IMAGE_REPO: registry.minsky.cc/minskylab/planetarium-cusco/domed
 
 jobs:
   build-push-registry:
