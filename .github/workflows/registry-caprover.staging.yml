@@ -43,4 +43,4 @@ jobs:
           host: "${{ secrets.CAPROVER_HOST }}"
           password: "${{ secrets.CAPROVER_PASSWORD }}"
           app: "${{ secrets.CAPROVER_APP_STAGING }}"
-          image: "${{ env.IMAGE_REPO }}:${{ github.sha }}"
+          image: "${{ env.IMAGE_REPO }}:staging"
