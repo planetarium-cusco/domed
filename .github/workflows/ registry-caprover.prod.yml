@@ -6,7 +6,9 @@ on:
       - main
 
 env:
-  IMAGE_REPO: registry.minsky.cc/planetarium-cusco/domed
+  ORGANIZATION: planetarium-cusco
+  PROJECT_NAME: domed
+  IMAGE_REPO: registry.minsky.cc/${{ env.ORGANIZATION }}/${{ env.PROJECT_NAME }}
 
 jobs:
   build-push-registry:
