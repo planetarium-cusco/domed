@@ -4,6 +4,7 @@ import { Title, Group, Select } from "@mantine/core";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 
+
 type HelloWorldProps = {
   name?: string;
 };

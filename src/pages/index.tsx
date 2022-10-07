@@ -1,3 +1,3 @@
-import { HomePageContent } from "modules/home/HomePageContent";
+import { HomePageContentSphere } from "modules/home/HomePageSphere";
 
-export default HomePageContent;
+export default HomePageContentSphere;
