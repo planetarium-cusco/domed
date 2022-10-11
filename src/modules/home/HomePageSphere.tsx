@@ -5,21 +5,24 @@ import { VRButton, ARButton, XR, Controllers, Hands } from "@react-three/xr";
 import { Canvas } from "@react-three/fiber";
 
 import { SphereMeshProps } from "components/ui/Sphere/Sphere";
+import { Detailed } from "@react-three/drei";
 
 const HomePageContentSphere = ({
-  radius = 24,
+  radius = 96,
   widthSegments = Math.ceil(radius / 2),
 }: SphereMeshProps) => {
   return (
     <>
       <VRButton />
-      <CanvasComponent>
+      <CanvasComponent radius={radius}>
         <XR>
           <Controllers />
           <Hands />
         </XR>
-        <SphereModel radius={radius} />
+        {/* <Detailed distances={[0, radius / 2, radius]}> */}
         <FloorModel radius={radius} widthSegments={widthSegments} />
+        <SphereModel radius={radius} />
+        {/* </Detailed> */}
       </CanvasComponent>
     </>
   );
